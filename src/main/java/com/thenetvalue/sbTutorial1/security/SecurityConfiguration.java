@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
-
+/*
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -23,7 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
+        auth */
                 /*
                 .jdbcAuthentication()
                 .dataSource(dataSource)
@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         + "from authorities "
                         + "where username = ?");
                 */
-                .inMemoryAuthentication()
+/*                .inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
                 .roles("USER")
@@ -65,4 +65,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return this.passwordEncoder;
     }
-}
+*/
+
+
