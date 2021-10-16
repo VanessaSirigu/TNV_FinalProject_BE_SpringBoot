@@ -7,15 +7,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/users")
+
 public class UserController {
     private UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping(produces = "application/json")
+    @RequestMapping({"/validateLogin"})
+    public User validateLogin () {
+        return new User();
     }
 
     //CRUD operations (Create Read Update Delete)
@@ -57,4 +64,5 @@ public class UserController {
     public String deleteUser(@PathVariable("id") int id) {
         return userService.deleteUser(id);
     }
+
 }
