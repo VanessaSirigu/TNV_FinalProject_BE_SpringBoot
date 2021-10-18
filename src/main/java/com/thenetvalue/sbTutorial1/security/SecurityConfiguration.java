@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+
 import javax.sql.DataSource;
 
 @Configuration
@@ -30,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("select username,authority "
                         + "from authorities "
                         + "where username = ?");
-        auth
+    /*    auth
                 .inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
@@ -39,11 +41,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                 .password(passwordEncoder.encode("admin"))
                 .roles("ADMIN");
+    */
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
+    public void configure(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/users/")
