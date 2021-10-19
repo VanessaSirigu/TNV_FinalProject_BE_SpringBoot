@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200/**")
 @RestController
 @RequestMapping("/users")
+
 public class UserController {
     private UserService userService;
 
@@ -18,7 +20,6 @@ public class UserController {
     }
 
     //CRUD operations (Create Read Update Delete)
-
     @PostMapping("/")
     public String addUser(@RequestBody User user) {
         return userService.addUser(user);
@@ -56,4 +57,5 @@ public class UserController {
     public String deleteUser(@PathVariable("id") int id) {
         return userService.deleteUser(id);
     }
+
 }

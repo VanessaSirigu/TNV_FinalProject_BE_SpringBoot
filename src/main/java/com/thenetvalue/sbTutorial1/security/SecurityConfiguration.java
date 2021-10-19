@@ -10,8 +10,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -23,17 +27,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+/*
         auth
-                /*
                 .jdbcAuthentication()
                 .dataSource(dataSource)
                 .usersByUsernameQuery("select username,password,enabled "
-                + "from user "
-                + "where username = ?")
+                        + "from user "
+                        + "where username = ?");
                 .authoritiesByUsernameQuery("select username,authority "
                         + "from authorities "
                         + "where username = ?");
-                */
+   */
+        auth
                 .inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
@@ -42,27 +47,43 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                 .password(passwordEncoder.encode("admin"))
                 .roles("ADMIN");
+
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+    public void configure(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(corsConfigurationSource());
+        http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users/*")
+                .antMatchers(HttpMethod.GET, "/users/**")
                 .hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/users/")
+                .antMatchers(HttpMethod.POST, "/users/**")
                 .hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/users/")
+                .antMatchers(HttpMethod.PUT, "/users/**")
                 .hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/users/")
+                .antMatchers(HttpMethod.DELETE, "/users/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .httpBasic()
+                .and().headers().frameOptions().disable()
+                .and().csrf().disable();
+
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
         return this.passwordEncoder;
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
