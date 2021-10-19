@@ -18,13 +18,13 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+/*
     @GetMapping(produces = "application/json")
     @RequestMapping({"/validateLogin"})
     public User validateLogin () {
         return new User();
     }
-
+*/
     //CRUD operations (Create Read Update Delete)
 
     @PostMapping("/")

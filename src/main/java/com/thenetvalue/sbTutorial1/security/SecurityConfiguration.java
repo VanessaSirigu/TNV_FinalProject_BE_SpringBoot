@@ -23,16 +23,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+/*
         auth
                 .jdbcAuthentication()
                 .dataSource(dataSource)
                 .usersByUsernameQuery("select username,password,enabled "
                         + "from user "
-                        + "where username = ?")
+                        + "where username = ?");
                 .authoritiesByUsernameQuery("select username,authority "
                         + "from authorities "
                         + "where username = ?");
-    /*    auth
+   */
+       auth
                 .inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
@@ -41,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                 .password(passwordEncoder.encode("admin"))
                 .roles("ADMIN");
-    */
+
     }
 
     @Override
@@ -49,13 +51,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users/")
+                .antMatchers(HttpMethod.GET, "/users/**")
                 .hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/users/")
+                .antMatchers(HttpMethod.POST, "/users/**")
                 .hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/users/")
+                .antMatchers(HttpMethod.PUT, "/users/**")
                 .hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/users/")
+                .antMatchers(HttpMethod.DELETE, "/users/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
