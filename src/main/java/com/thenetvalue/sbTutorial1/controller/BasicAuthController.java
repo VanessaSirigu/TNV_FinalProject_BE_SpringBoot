@@ -19,7 +19,7 @@ public class BasicAuthController {
 
     @GetMapping(produces = "application/json")
     @RequestMapping({"/validateLogin"})
-    public User validateLogin() {
-        return new User();
+    public String validateLogin() {
+        return "authenticated successfully";
     }
 }

@@ -31,14 +31,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth
                 .jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select username,password,enabled "
+                .usersByUsernameQuery("select username,password "
                         + "from user "
                         + "where username = ?");
                 .authoritiesByUsernameQuery("select username,authority "
                         + "from authorities "
-                        + "where username = ?");
-   */
-        auth
+                        + "where username = ?"); */
+
+       auth
                 .inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
@@ -68,7 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and().headers().frameOptions().disable()
                 .and().csrf().disable();
-
     }
 
     @Bean
